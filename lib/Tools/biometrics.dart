@@ -1,6 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:local_auth/local_auth.dart';
 
+/// Trida pro spravu biometriky
+
 class Biometrics {
   static var _localAuthentication = LocalAuthentication();
 
@@ -33,27 +35,13 @@ class Biometrics {
   static Future<bool> authenticateUser() async {
     bool isAuthenticated = false;
 
-    await _localAuthentication.authenticateWithBiometrics(
-      localizedReason:
-      "Please authenticate to view your transaction overview",
-      useErrorDialogs: true,
-      stickyAuth: true,
-    );
-
     try {
       isAuthenticated = await _localAuthentication.authenticateWithBiometrics(
         localizedReason:
-        "Please authenticate to view your transaction overview",
+            "Please authenticate to view your transaction overview",
         useErrorDialogs: true,
         stickyAuth: true,
       );
-
-      isAuthenticated
-          ? print('User is authenticated!')
-          : print('User is not authenticated.');
-
-      return isAuthenticated;
-
     } on PlatformException catch (e) {
       print(e);
     }

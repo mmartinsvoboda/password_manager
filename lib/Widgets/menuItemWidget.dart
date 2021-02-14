@@ -5,6 +5,10 @@ import 'package:password_manager/Pages/passwordForm.dart';
 import 'package:password_manager/Tools/biometrics.dart';
 import 'package:toast/toast.dart';
 
+/// Tohle je widget, ktery pak zobrazuje zaznam na hlavni strance
+/// Snazil jsem se ho navrhnout tak, aby byl posleze pouzitelny i pro platebni
+/// karty a dalsi typy zaznamu
+
 class MenuItemWidget extends StatefulWidget {
   final Password password;
   final Function update;
@@ -19,10 +23,22 @@ class _MenuItemWidgetState extends State<MenuItemWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Navigator.of(context)
-          .push(new MaterialPageRoute<Null>(builder: (BuildContext context) {
-        return PasswordForm(password: widget.password);
-      })),
+      onTap: () async {
+        if (await Biometrics.canCheckBiometrics()) {
+          await Biometrics.getListOfBiometricTypes();
+          if (await Biometrics.authenticateUser()) {
+            await widget.password.copyFunction();
+            widget.update();
+            return Navigator.of(context).push(
+                new MaterialPageRoute<Null>(builder: (BuildContext context) {
+              return PasswordForm(password: widget.password);
+            }));
+          }
+        }
+
+        Toast.show("Nelze ověřit biometriku.", context,
+            duration: 5, gravity: Toast.BOTTOM);
+      },
       child: Card(
         color: Colors.grey[50],
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -77,11 +93,10 @@ class _MenuItemWidgetState extends State<MenuItemWidget> {
                             duration: 5, gravity: Toast.BOTTOM);
                         return;
                       }
-
-                      Toast.show("Nelze ověřit biometriku.", context,
-                          duration: 5, gravity: Toast.BOTTOM);
-                      return;
                     }
+
+                    Toast.show("Nelze ověřit biometriku.", context,
+                        duration: 5, gravity: Toast.BOTTOM);
                   },
                 ),
               ),
@@ -97,9 +112,18 @@ class _MenuItemWidgetState extends State<MenuItemWidget> {
                     size: 25,
                   ),
                   onPressed: () async {
-                    await widget.password.deleteFunction();
-                    widget.update();
-                    Toast.show("Úspěšně odebráno", context,
+                    if (await Biometrics.canCheckBiometrics()) {
+                      await Biometrics.getListOfBiometricTypes();
+                      if (await Biometrics.authenticateUser()) {
+                        await widget.password.deleteFunction();
+                        widget.update();
+                        Toast.show("Úspěšně odebráno", context,
+                            duration: 5, gravity: Toast.BOTTOM);
+                        return;
+                      }
+                    }
+
+                    Toast.show("Nelze ověřit biometriku.", context,
                         duration: 5, gravity: Toast.BOTTOM);
                   },
                 ),

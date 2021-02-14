@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:password_manager/Pages/passwordForm.dart';
 
+/// Tohle je FAB pro pridavani noveho zaznamu
+/// Sel jsem touhle cestou, aby bylo jednoduche do budoucna pridat dalsi
+/// popupy pro jine typy zaznamu
+
 Widget newItemFAB(BuildContext context) {
   return SpeedDial(
     /// both default to 16
@@ -43,15 +47,17 @@ Widget newItemFAB(BuildContext context) {
     // childMarginTop: 2,
     children: [
       SpeedDialChild(
-        child: Icon(Icons.admin_panel_settings, color: Colors.purple[800],),
+        child: Icon(
+          Icons.admin_panel_settings,
+          color: Colors.purple[800],
+        ),
         backgroundColor: Colors.deepOrange[100],
         label: 'Přidat heslo',
         labelStyle: TextStyle(fontSize: 18.0),
-        onTap: () => Navigator.of(context).push(new MaterialPageRoute<Null>(
-            builder: (BuildContext context) {
-              return PasswordForm();
-            }
-        )),
+        onTap: () => Navigator.of(context)
+            .push(new MaterialPageRoute<Null>(builder: (BuildContext context) {
+          return PasswordForm();
+        })),
       ),
     ],
   );

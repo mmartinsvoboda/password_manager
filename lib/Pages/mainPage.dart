@@ -3,36 +3,29 @@ import 'package:password_manager/Database/PasswordDb.dart';
 import 'package:password_manager/Models/menuItem.dart';
 import 'package:password_manager/Widgets/newItemFAB.dart';
 
+/// Hlavni stranka - Zobrazeni vsech polozek, moznost mazat a kopirovat
+/// pripadne prejit na zobrazovaci/editacni formular
+
 class PasswordManager extends StatefulWidget {
   @override
   _PasswordManagerState createState() => _PasswordManagerState();
 }
 
 class _PasswordManagerState extends State<PasswordManager> {
-
   List<MenuItem> data = List();
 
   void _update() {
-    setState((){});
-  }
-
-  @override
-  initState() {
-    super.initState();
-
-    new Future<List<MenuItem>>.delayed(new Duration(seconds: 2), () async => await PasswordDb().getAllItems()).then((List<MenuItem> value) {
-      setState(() {
-        value.sort((a,b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-        data = value;
-      });
-    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    new Future<List<MenuItem>>.delayed(new Duration(seconds: 2), () async => await PasswordDb().getAllItems()).then((List<MenuItem> value) {
+    new Future<List<MenuItem>>.delayed(new Duration(seconds: 2),
+            () async => await PasswordDb().getAllItems())
+        .then((List<MenuItem> value) {
       setState(() {
-        value.sort((a,b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        value.sort(
+            (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
         data = value;
       });
     });
@@ -145,7 +138,7 @@ class _PasswordManagerState extends State<PasswordManager> {
                           ),
                         ),
                         child: Text(
-                          "Osobní údaje",
+                          "Platební karty",
                           style: TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),

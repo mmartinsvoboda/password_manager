@@ -1,7 +1,9 @@
 import 'package:password_manager/Models/password.dart';
-import 'DbManager.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'DbManager.dart';
+
+/// Tohle je trida, ktera ma na starost tabulku pro hesla
 class PasswordDb {
   static const String table = "passwords";
 
@@ -9,8 +11,6 @@ class PasswordDb {
     var db = await DbManager().getPasswordManager();
 
     List<Map> maps = await db.rawQuery('SELECT * FROM $table ORDER BY name');
-
-    print(maps);
 
     return List<Password>.generate(maps.length, (i) {
       return Password.withSecureStorageKey(

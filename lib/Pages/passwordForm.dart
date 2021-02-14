@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:password_manager/Models/password.dart';
 import 'package:toast/toast.dart';
 
+/// Formular pro pridani/editaci/zobrazeni hesla.
+/// Hodil jsem vsechno do jednoho
+
 class PasswordForm extends StatefulWidget {
   final Password password;
 
@@ -32,7 +35,6 @@ class _PasswordFormState extends State<PasswordForm> {
   var topText = "Nové heslo";
   var buttonText = "Přidat";
 
-
   @override
   initState() {
     super.initState();
@@ -40,7 +42,9 @@ class _PasswordFormState extends State<PasswordForm> {
       nameController.text = widget.password.name;
       accountController.text = widget.password.account;
 
-      new Future<String>.delayed(new Duration(seconds: 2), () async => await widget.password.getPasswordFromSecureStorage()).then((String value) {
+      new Future<String>.delayed(new Duration(seconds: 2),
+              () async => await widget.password.getPasswordFromSecureStorage())
+          .then((String value) {
         setState(() {
           passwordController.text = value;
         });
@@ -141,23 +145,25 @@ class _PasswordFormState extends State<PasswordForm> {
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
-                              child: Column(
+                              child: Row(
                                 children: <Widget>[
-                                  TextFormField(
-                                    controller: passwordController,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Tohle je potřeba vyplnit';
-                                      }
-                                      return null;
-                                    },
-                                    obscureText: _obscureText,
+                                  Expanded(
+                                    child: TextFormField(
+                                      controller: passwordController,
+                                      validator: (value) {
+                                        if (value.isEmpty) {
+                                          return 'Tohle je potřeba vyplnit';
+                                        }
+                                        return null;
+                                      },
+                                      obscureText: _obscureText,
+                                    ),
                                   ),
-                                  new FlatButton(
+                                  IconButton(
                                       onPressed: _toggle,
-                                      child: new Text(_obscureText
-                                          ? "Zobraz heslo"
-                                          : "Skrýt heslo"))
+                                      icon: Icon(_obscureText
+                                          ? Icons.remove_red_eye_rounded
+                                          : Icons.remove_red_eye_outlined))
                                 ],
                               ),
                             ),

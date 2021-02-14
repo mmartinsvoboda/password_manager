@@ -1,10 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:password_manager/Database/PasswordDb.dart';
 import 'package:password_manager/Models/menuItem.dart';
 import 'package:password_manager/Widgets/menuItemWidget.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+/// Tohle je trida, ktera pracuje se samotnym objektem hesla
+/// Zde pracuji s DB a SecureStorage.
 
 class Password implements MenuItem {
   int id;
@@ -25,7 +27,8 @@ class Password implements MenuItem {
     this.account = account;
   }
 
-  Password.withSecureStorageKey(int id, String name, String account, String secureStorageKey) {
+  Password.withSecureStorageKey(
+      int id, String name, String account, String secureStorageKey) {
     this.id = id;
     this.name = name;
     this.account = account;
@@ -37,7 +40,7 @@ class Password implements MenuItem {
     final storage = new FlutterSecureStorage();
 
     var password = await storage.read(key: secureStorageKey);
-    print(password);
+
     // Write value
     return password;
   }
@@ -47,14 +50,12 @@ class Password implements MenuItem {
     final storage = new FlutterSecureStorage();
     await createSecureStorageKey();
 
-    print(newPassword);
-
     // Write value
     await storage.write(key: secureStorageKey, value: newPassword);
   }
 
   Future<void> createSecureStorageKey() async {
-    if(secureStorageKey != null) return;
+    if (secureStorageKey != null) return;
 
     var base = name + '_' + account;
     var locKey = base;
@@ -84,7 +85,6 @@ class Password implements MenuItem {
 
   Future<void> copyFunction() async {
     var password = await getPasswordFromSecureStorage();
-    print(password);
     Clipboard.setData(new ClipboardData(text: password));
   }
 
